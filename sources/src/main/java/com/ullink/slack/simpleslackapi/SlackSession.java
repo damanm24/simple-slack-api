@@ -299,5 +299,15 @@ public interface SlackSession {
   
     void removePinRemovedListener(PinRemovedListener listener);
 
+    void addSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener);
+
+    void removeSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener);
+
+    void addSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener);
+
+    void removeSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener);
+
     long getHeartbeat();
+
+    void setAuthToken(String newToken);
 }

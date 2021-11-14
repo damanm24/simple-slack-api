@@ -38,6 +38,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected final List<PresenceChangeListener>         presenceChangeListener    = new CopyOnWriteArrayList<>();
     protected final List<SlackDisconnectedListener>      slackDisconnectedListener = new CopyOnWriteArrayList<>();
     protected final List<UserTypingListener>             userTypingListener        = new CopyOnWriteArrayList<>();
+    protected final List<SlackMemberChannelJoinedListener> memberChannelJoinedListener = new CopyOnWriteArrayList<>();
+    protected final List<SlackMemberChannelLeftListener>   memberChannelLeftListener = new CopyOnWriteArrayList<>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean                           DEFAULT_UNFURL           = true;
@@ -489,6 +491,26 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    public void addSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener) {
+        memberChannelJoinedListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener){
+        memberChannelJoinedListener.remove(listener);
+    }
+
+    @Override
+    public void addSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
+        memberChannelLeftListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
+        memberChannelLeftListener.remove(listener);
+    }
+
+    @Override
     public void addPresenceChangeListener(PresenceChangeListener listener) {
         presenceChangeListener.add(listener);
     }
@@ -507,4 +529,5 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeUserTypingListener(UserTypingListener listener) {
         userTypingListener.remove(listener);
     }
+
 }

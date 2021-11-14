@@ -59,6 +59,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public void setAuthToken(String newToken) {
+
+            }
+
+            @Override
             public void setPresence(SlackPresence presence) {}
 
             @Override

@@ -78,6 +78,10 @@ class SlackJSONMessageParser {
                 return extractChannelJoinedEvent(slackSession, obj);
             case CHANNEL_LEFT:
                 return extractChannelLeftEvent(slackSession, obj);
+            case MEMBER_CHANNEL_LEFT:
+                return extractMemberChannelLeftEvent(slackSession, obj);
+            case MEMBER_CHANNEL_JOINED:
+                return extractMemberChannelJoinedEvent(slackSession, obj);
             case GROUP_JOINED:
                 return extractGroupJoinedEvent(slackSession, obj);
             case REACTION_ADDED:
@@ -99,6 +103,22 @@ class SlackJSONMessageParser {
             default:
                 return new UnknownEvent(obj.toString());
         }
+    }
+
+    private static SlackMemberChannelJoined extractMemberChannelJoinedEvent(SlackSession slackSession, JsonObject obj) {
+        String channelID = GsonHelper.getStringOrNull(obj.get("channel"));
+        String userID = GsonHelper.getStringOrNull(obj.get("user"));
+        SlackChannel slackChannel = slackSession.findChannelById(channelID);
+        SlackUser slackUser = slackSession.findUserById(userID);
+        return new SlackMemberChannelJoined(slackChannel, slackUser);
+    }
+
+    private static SlackMemberChannelLeft extractMemberChannelLeftEvent(SlackSession slackSession, JsonObject obj) {
+        String channelID = GsonHelper.getStringOrNull(obj.get("channel"));
+        String userID = GsonHelper.getStringOrNull(obj.get("user"));
+        SlackChannel slackChannel = slackSession.findChannelById(channelID);
+        SlackUser slackUser = slackSession.findUserById(userID);
+        return new SlackMemberChannelLeft(slackChannel , slackUser);
     }
 
     private static SlackChannelJoined extractChannelJoinedEvent(SlackSession slackSession, JsonObject obj)
