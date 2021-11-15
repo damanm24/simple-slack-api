@@ -14,6 +14,9 @@ public class TestUtils {
 
   public static String getFile(String filename) throws IOException {
     InputStream stream = TestUtils.class.getResourceAsStream(filename);
+    if (stream == null) {
+      return null;
+    }
     InputStreamReader isReader = new InputStreamReader(stream);
     BufferedReader reader = new BufferedReader(isReader);
     StringBuilder strBuilder = new StringBuilder();
@@ -37,5 +40,18 @@ public class TestUtils {
     return gson;
   }
 
-
+  public static String getLines(String filename) throws IOException {
+    InputStream stream = TestUtils.class.getResourceAsStream(filename);
+    if (stream == null) {
+      return null;
+    }
+    InputStreamReader isReader = new InputStreamReader(stream);
+    BufferedReader reader = new BufferedReader(isReader);
+    StringBuilder strBuilder = new StringBuilder();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      strBuilder.append(line + "\n");
+    }
+    return strBuilder.toString();
+  }
 }

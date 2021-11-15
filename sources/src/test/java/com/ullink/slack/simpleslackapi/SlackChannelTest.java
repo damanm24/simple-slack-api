@@ -10,39 +10,63 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMemberChannelJoinedListene
 import com.ullink.slack.simpleslackapi.listeners.SlackMemberChannelLeftListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.util.EntityUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
-import static com.ullink.slack.simpleslackapi.TestUtils.getFile;
-import static com.ullink.slack.simpleslackapi.TestUtils.gson;
+import static com.ullink.slack.simpleslackapi.TestUtils.*;
 import static org.junit.Assert.*;
 
 public class SlackChannelTest {
+  private final PrintStream standardOut = System.out;
+  private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+
+  @Before
+  public void setUp() {
+    System.setOut(new PrintStream(outputStreamCaptor));
+  }
+  @After
+  public void setOut() {
+    System.setOut(standardOut);
+  }
 
   @Test
   public void testChannelConnect() throws IOException {
-    SlackSession session = SlackSessionFactory.createWebSocketSlackSession("xoxb-2661572183286-2665263371079-nz5YTqJWddt5eoaf8VvYLqEq");
+    String authTokens = getLines("/authToken");
+    if (authTokens == null) {
+      return;
+    }
+    String[] tokens = authTokens.split("\n");
+    SlackSession session = SlackSessionFactory.createWebSocketSlackSession(tokens[0]);
     session.connect();
 
-    SlackMessagePostedListener messagePostedListener = new SlackMessagePostedListener()
-    {
-      @Override
-      public void onEvent(SlackMessagePosted event, SlackSession session)
-      {
-        SlackChannel channelOnWhichMessageWasPosted = event.getChannel();
-        String messageContent = event.getMessageContent();
-        SlackUser messageSender = event.getSender();
-        System.out.println(messageContent);
+    CloseableHttpClient client = HttpClients.createDefault();
+    HttpPost httpPost = new HttpPost("https://slack.com/api/conversations.invite?channel=C02KT344KML&users=U02LBUQ1JV6");
+    httpPost.addHeader("Authorization", "Bearer " + tokens[1]);
+
+    ResponseHandler< String > responseHandler = response -> {
+      int status = response.getStatusLine().getStatusCode();
+      if (status >= 200 && status < 300) {
+        HttpEntity entity = response.getEntity();
+        return entity != null ? EntityUtils.toString(entity) : null;
+      } else {
+        throw new ClientProtocolException("Unexpected response status: " + status);
       }
     };
 
-    SlackMemberChannelJoinedListener test = new SlackMemberChannelJoinedListener() {
-      @Override
-      public void onEvent(SlackMemberChannelJoined event, SlackSession session) {
-        System.out.println("member joined");
-      }
-    };
+
+    SlackMemberChannelJoinedListener test = (event, session1) -> System.out.println("member joined");
 
     SlackMemberChannelLeftListener test1 = new SlackMemberChannelLeftListener() {
       @Override
@@ -51,20 +75,11 @@ public class SlackChannelTest {
       }
     };
 
-    SlackChannelLeftListener listener = new SlackChannelLeftListener() {
-      @Override
-      public void onEvent(SlackChannelLeft event, SlackSession session) {
-        System.out.println("someone left");
-      }
-    };
-    session.addChannelLeftListener(listener);
-    session.addMessagePostedListener(messagePostedListener);
     session.addSlackMemberChannelJoinedListener(test);
     session.addSlackMemberChannelLeftListener(test1);
-
-    SlackMessageHandle<SlackMessageReply> reply = session.sendMessage(session.findChannelByName("general"), "Hello World");
-
-    while(true) {}
+    client.execute(httpPost);
+    //session.inviteToChannel("C02KT344KML", "damanmulye24");
+    assert(outputStreamCaptor.toString().equals("member joined\n"));
   }
 
   @Test
