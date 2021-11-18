@@ -706,21 +706,37 @@ public class SlackSessionWrapper implements SlackSession
         delegate.removePinRemovedListener(listener);
     }
 
+    /**
+     * Adds a user's custom defined Channel Joined listener to existing slack connection session
+     * @param listener the user's implemented listener to add to the session
+     */
     @Override
     public void addSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener) {
         delegate.addSlackMemberChannelJoinedListener(listener);
     }
 
+    /**
+     * Removes a user's custom defined Channel Joined listener to existing slack connection session
+     * @param listener the user's implemented listener to remove from the session
+     */
     @Override
     public void removeSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener) {
         delegate.removeSlackMemberChannelJoinedListener(listener);
     }
 
+    /**
+     * Adds a user's custom defined Channel Leave listener to existing slack connection session
+     * @param listener the user's implemented listener to add to the session
+     */
     @Override
     public void addSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
         delegate.addSlackMemberChannelLeftListener(listener);
     }
 
+    /**
+     * Removes a user's custom defined Channel Leave listener to existing slack connection session
+     * @param listener the user's implemented listener to remove from the session
+     */
     @Override
     public void removeSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
         delegate.removeSlackMemberChannelLeftListener(listener);
@@ -731,6 +747,10 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.getHeartbeat();
     }
 
+    /**
+     * Set a new Auth Token to be used during a session
+     * @param newToken the new auth token to use
+     */
     @Override
     public void setAuthToken(String newToken) {
         delegate.setAuthToken(newToken);

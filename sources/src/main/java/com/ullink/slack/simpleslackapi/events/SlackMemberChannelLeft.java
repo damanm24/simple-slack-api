@@ -13,9 +13,25 @@ public class SlackMemberChannelLeft implements SlackEvent {
     @NonNull
     private SlackUser user;
 
+    /**
+     * Returns the event type associated with this class
+     * @return Slack Member Channel Leave event type
+     */
     @Override
     public SlackEventType getEventType() {
         return SlackEventType.SLACK_MEMBER_CHANNEL_LEFT;
     }
+
+    /**
+     * Returns the SlackChannel object associated with a Slack Member Leave event
+     * @return SlackChannel associated with this event
+     */
+    public SlackChannel getSlackChannel() { return slackChannel; }
+
+    /**
+     * Returns the SlackUser object associated with a Slack Member Leave event
+     * @return SlackUser associated with this event
+     */
+    public SlackUser getSlackUser() { return user; }
 
 }

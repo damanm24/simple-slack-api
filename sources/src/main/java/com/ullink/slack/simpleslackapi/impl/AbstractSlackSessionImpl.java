@@ -490,21 +490,37 @@ abstract class AbstractSlackSessionImpl implements SlackSession
         pinRemovedListener.remove(listener);
     }
 
+    /**
+     * Add SlackMemberChannelJoinedListener to the corresponding listener list
+     * @param listener listener to add to slack session
+     */
     @Override
     public void addSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener) {
         memberChannelJoinedListener.add(listener);
     }
 
+    /**
+     * Remove SlackMemberChannelJoinedListener from the corresponding listener list
+     * @param listener listener to remove from slack session
+     */
     @Override
     public void removeSlackMemberChannelJoinedListener(SlackMemberChannelJoinedListener listener){
         memberChannelJoinedListener.remove(listener);
     }
 
+    /**
+     * Add SlackMemberChannelLeftListener to the corresponding listener list
+     * @param listener listener to add to the slack session
+     */
     @Override
     public void addSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
         memberChannelLeftListener.add(listener);
     }
 
+    /**
+     * Remove SlackMemberChannelLeftListener from the corresponding listener list
+     * @param listener listener to remove from the slack session
+     */
     @Override
     public void removeSlackMemberChannelLeftListener(SlackMemberChannelLeftListener listener) {
         memberChannelLeftListener.remove(listener);
