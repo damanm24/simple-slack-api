@@ -42,7 +42,7 @@ public class SlackChannelTest {
   }
 
   @Test
-  public void testChannelConnect() throws IOException {
+  public void testChannelMemberListeners() throws IOException {
     String authTokens = getLines("/authToken");
     if (authTokens == null) {
       return;
@@ -64,22 +64,23 @@ public class SlackChannelTest {
         throw new ClientProtocolException("Unexpected response status: " + status);
       }
     };
+    SlackMemberChannelJoinedListener joinListener = (event, session1) -> System.out.println("member joined");
+    session.addSlackMemberChannelJoinedListener(joinListener);
+    client.execute(httpPost);
+    assert(outputStreamCaptor.toString().equals("member joined\n"));
 
 
-    SlackMemberChannelJoinedListener test = (event, session1) -> System.out.println("member joined");
-
-    SlackMemberChannelLeftListener test1 = new SlackMemberChannelLeftListener() {
+    SlackMemberChannelLeftListener leaveListener = new SlackMemberChannelLeftListener() {
       @Override
       public void onEvent(SlackMemberChannelLeft event, SlackSession session) {
         System.out.println("member left");
       }
     };
-
-    session.addSlackMemberChannelJoinedListener(test);
-    session.addSlackMemberChannelLeftListener(test1);
+    session.addSlackMemberChannelLeftListener(leaveListener);
+    httpPost = new HttpPost("https://slack.com/api/conversations.kick?channel=C02KT344KML&users=U02LBUQ1JV6");
+    httpPost.addHeader("Authorization", "Bearer " + tokens[1]);
     client.execute(httpPost);
-    //session.inviteToChannel("C02KT344KML", "damanmulye24");
-    assert(outputStreamCaptor.toString().equals("member joined\n"));
+    assert(outputStreamCaptor.toString().equals("member left"));
   }
 
   @Test
