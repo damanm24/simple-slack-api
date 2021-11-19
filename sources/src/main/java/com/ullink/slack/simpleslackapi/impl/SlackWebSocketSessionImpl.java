@@ -30,7 +30,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -153,7 +152,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private  static final int                 DEFAULT_HEARTBEAT_IN_MILLIS = 30000;
 
     private volatile Session websocketSession;
-    private final    String  authToken;
+    private          String  authToken;
     private          String  slackApiBase               = DEFAULT_SLACK_API_HTTPS_ROOT;
     private String                            proxyAddress;
     private int                               proxyPort                  = -1;
@@ -381,7 +380,8 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         LOGGER.info("connecting to slack");
         HttpClient httpClient = getHttpClient();
-        HttpGet request = new HttpGet(slackApiBase + "rtm.start?token=" + authToken);
+        HttpPost request = new HttpPost(slackApiBase + "rtm.start");
+        request.addHeader("Authorization", "Bearer " + authToken);
         HttpResponse response = httpClient.execute(request);
         LOGGER.debug(response.getStatusLine().toString());
         String jsonResponse = consumeToString(response.getEntity().getContent());
@@ -874,7 +874,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         SlackMessageHandle<SlackChannelReply> handle = new SlackMessageHandle<>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
         arguments.put("token", authToken);
-        arguments.put("name", channelName);
+        arguments.put("channel", channelName);
         postSlackCommand(arguments, CONVERSATION.JOIN_COMMAND, handle, SlackChannelReply.class);
         return handle;
     }
@@ -906,7 +906,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       Map<String, String> arguments = new HashMap<>();
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
-      arguments.put("user", user.getId());
+      arguments.put("users", user.getId());
       postSlackCommand(arguments, CONVERSATION.INVITE_COMMAND, handle, SlackChannelReply.class);
       return handle;
     }
@@ -1319,6 +1319,11 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
 
     public long getHeartbeat() {
         return TimeUnit.MILLISECONDS.toSeconds(heartbeat);
+    }
+
+    @Override
+    public void setAuthToken(String token) {
+        this.authToken = token;
     }
 
     private final PresenceChangeListener INTERNAL_PRESENCE_CHANGE_LISTENER = new PresenceChangeListener()

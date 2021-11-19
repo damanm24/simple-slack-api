@@ -730,4 +730,13 @@ public class SlackSessionWrapper implements SlackSession
     {
         return delegate.getHeartbeat();
     }
+
+    /**
+     * Sets the auth token for the current slack session.
+     * @param token token to replace with
+     */
+    @Override
+    public void setAuthToken(String token) {
+        delegate.setAuthToken(token);
+    }
 }

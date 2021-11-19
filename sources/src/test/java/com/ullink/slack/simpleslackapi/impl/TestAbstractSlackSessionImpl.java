@@ -390,6 +390,11 @@ public class TestAbstractSlackSessionImpl
             return 0;
         }
 
+        @Override
+        public void setAuthToken(String token) {
+
+        }
+
     }
 
     @Test

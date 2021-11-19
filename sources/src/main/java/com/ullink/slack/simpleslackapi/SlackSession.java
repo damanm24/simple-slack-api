@@ -300,4 +300,6 @@ public interface SlackSession {
     void removePinRemovedListener(PinRemovedListener listener);
 
     long getHeartbeat();
+
+    void setAuthToken(String token);
 }
