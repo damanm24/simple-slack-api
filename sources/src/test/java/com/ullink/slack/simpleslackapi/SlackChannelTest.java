@@ -1,5 +1,6 @@
 package com.ullink.slack.simpleslackapi;
 
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.junit.Test;
 
 import java.io.IOException;
