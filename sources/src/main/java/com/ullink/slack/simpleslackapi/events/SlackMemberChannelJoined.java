@@ -14,6 +14,8 @@ public class SlackMemberChannelJoined implements SlackEvent {
     private SlackUser   user;
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Returns the event type associated with this class
      * @return Slack Member Channel Joined event type
      */
@@ -23,12 +25,16 @@ public class SlackMemberChannelJoined implements SlackEvent {
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Returns the SlackChannel object associated with a Slack Member Join event
      * @return SlackChannel associated with this event
      */
     public SlackChannel getSlackChannel() { return slackChannel; }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Returns the SlackUser object associated with a Slack Member Join event
      * @return SlackUser associated with this event
      */
