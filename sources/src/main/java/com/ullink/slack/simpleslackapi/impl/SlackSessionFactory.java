@@ -7,18 +7,32 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 
 public class SlackSessionFactory {
-    public static SlackSession createWebSocketSlackSession(String authToken)
+    /**
+     * CS427
+     * ISSUE LINK: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param authToken auth token for bot
+     * @param appLevelToken token associated with Slack App
+     * @return Slack Session object
+     */
+    public static SlackSession createWebSocketSlackSession(String authToken, String appLevelToken)
     {
-    	return new SlackWebSocketSessionImpl(null, authToken, null, true, true, 0, null);
+        return new SlackWebSocketSessionImpl(null, authToken, appLevelToken, null, true, true, 0, null);
     }
-
-    public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken) {
-        return new SlackSessionFactoryBuilder(authToken);
+    /**
+     * CS427
+     * ISSUE LINK: https://github.com/Itiviti/simple-slack-api/issues/284
+     * @param authToken auth token for bot
+     * @param appLevelToken token associated with the app
+     * @return
+     */
+    public static SlackSessionFactoryBuilder getSlackSessionBuilder(String authToken, String appLevelToken) {
+        return new SlackSessionFactoryBuilder(authToken, appLevelToken);
     }
 
     public static class SlackSessionFactoryBuilder {
 
         private String authToken;
+        private String appLevelToken;
         private String slackBaseApi;
         private Proxy.Type proxyType;
         private String proxyAddress;
@@ -31,15 +45,16 @@ public class SlackSessionFactory {
         private boolean autoreconnection;
         private boolean rateLimitSupport = true;
 
-        private SlackSessionFactoryBuilder(String authToken) {
+        private SlackSessionFactoryBuilder(String authToken, String appLevelToken) {
             this.authToken = authToken;
+            this.appLevelToken = appLevelToken;
         }
 
         public SlackSessionFactoryBuilder withBaseApiUrl(String slackBaseApi) {
-        	this.slackBaseApi = slackBaseApi;
-        	return this;
+            this.slackBaseApi = slackBaseApi;
+            return this;
         }
-        
+
         public SlackSessionFactoryBuilder withProxy(Proxy.Type proxyType, String proxyAddress, int proxyPort) {
             this.proxyType = proxyType;
             this.proxyAddress = proxyAddress;
@@ -78,7 +93,7 @@ public class SlackSessionFactory {
         }
 
         public SlackSession build() {
-            return new SlackWebSocketSessionImpl(provider, authToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit);
+            return new SlackWebSocketSessionImpl(provider, authToken, appLevelToken, slackBaseApi, proxyType, proxyAddress, proxyPort, proxyUser, proxyPassword, autoreconnection, rateLimitSupport, heartbeat, unit);
         }
     }
 }

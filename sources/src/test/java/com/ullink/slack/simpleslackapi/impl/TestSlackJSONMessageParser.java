@@ -59,6 +59,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public void setAuthToken(String token) {
+
+            }
+
+            @Override
             public void setPresence(SlackPresence presence) {}
 
             @Override
@@ -295,7 +300,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+            public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
             {
                 return null;
             }

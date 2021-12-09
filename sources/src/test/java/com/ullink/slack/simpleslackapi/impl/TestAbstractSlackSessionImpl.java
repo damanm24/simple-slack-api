@@ -258,7 +258,7 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+        public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
         {
             return null;
         }
@@ -388,6 +388,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public long getHeartbeat() {
             return 0;
+        }
+
+        @Override
+        public void setAuthToken(String token) {
+
         }
 
     }

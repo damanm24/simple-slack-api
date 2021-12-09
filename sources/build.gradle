@@ -10,6 +10,24 @@ buildscript {
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1"
     }
 }
+plugins {
+    id 'pmd'
+}
+
+apply plugin: 'findbugs'
+findbugs {
+    ignoreFailures = false
+    toolVersion = "3.0.1"
+    sourceSets=[sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -23,6 +41,7 @@ apply from: project.rootProject.file("gradle/scripts/coverage.gradle")
 group = 'com.ullink.slack'
 archivesBaseName = 'simpleslackapi'
 version = '1.3.0'
+
 
 
 def pomConfig = {
