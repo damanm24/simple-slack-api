@@ -707,6 +707,8 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Adds a user's custom defined Channel Joined listener to existing slack connection session
      * @param listener the user's implemented listener to add to the session
      */
@@ -716,6 +718,8 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Removes a user's custom defined Channel Joined listener to existing slack connection session
      * @param listener the user's implemented listener to remove from the session
      */
@@ -725,6 +729,8 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Adds a user's custom defined Channel Leave listener to existing slack connection session
      * @param listener the user's implemented listener to add to the session
      */
@@ -734,6 +740,8 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Removes a user's custom defined Channel Leave listener to existing slack connection session
      * @param listener the user's implemented listener to remove from the session
      */
@@ -748,6 +756,8 @@ public class SlackSessionWrapper implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Set a new Auth Token to be used during a session
      * @param newToken the new auth token to use
      */
