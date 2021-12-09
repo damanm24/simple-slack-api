@@ -476,7 +476,14 @@ public class SlackSessionWrapper implements SlackSession
         return delegate.unarchiveChannel(channelId);
     }
 
-    @Override public SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user)
+    /**
+     * CS427
+     * ISSUE LINK: https://github.com/Itiviti/simple-slack-api/issues/284
+     * Allows client to open direct messages with a specific user
+     * @param user slack user to open direct messages with
+     * @return reply from command
+     */
+    @Override public SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user)
     {
         return delegate.openDirectMessageChannel(user);
     }

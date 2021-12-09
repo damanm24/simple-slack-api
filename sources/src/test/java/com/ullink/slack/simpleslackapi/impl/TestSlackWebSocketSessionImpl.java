@@ -14,7 +14,7 @@ public class TestSlackWebSocketSessionImpl {
   @Test(expected = IllegalArgumentException.class)
   public void testSendMessageWithNullChanel(@Mocked WebSocketContainerProvider provider)
   {
-    SlackWebSocketSessionImpl webSocketSession = new SlackWebSocketSessionImpl(provider, "", null, false, false, 42L, TimeUnit.MILLISECONDS);
+    SlackWebSocketSessionImpl webSocketSession = new SlackWebSocketSessionImpl(provider, "", "", null, false, false, 42L, TimeUnit.MILLISECONDS);
     try {
       webSocketSession.sendMessage((SlackChannel) null, "");
     } catch (NullPointerException e) {

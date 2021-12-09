@@ -3,6 +3,7 @@ package com.ullink.slack.simpleslackapi;
 import com.ullink.slack.simpleslackapi.blocks.Block;
 import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.*;
+import sun.net.www.content.text.Generic;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,7 +186,8 @@ public interface SlackSession {
     SlackMessageHandle<ParsedSlackReply> archiveChannel(String channelId);
 
     SlackMessageHandle<ParsedSlackReply> unarchiveChannel(String channelId);
-    SlackMessageHandle<SlackChannelReply> openDirectMessageChannel(SlackUser user);
+
+    SlackMessageHandle<GenericSlackReply> openDirectMessageChannel(SlackUser user);
 
     SlackMessageHandle<SlackChannelReply> openMultipartyDirectMessageChannel(SlackUser... users);
 
