@@ -491,6 +491,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Add SlackMemberChannelJoinedListener to the corresponding listener list
      * @param listener listener to add to slack session
      */
@@ -500,6 +502,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Remove SlackMemberChannelJoinedListener from the corresponding listener list
      * @param listener listener to remove from slack session
      */
@@ -509,6 +513,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Add SlackMemberChannelLeftListener to the corresponding listener list
      * @param listener listener to add to the slack session
      */
@@ -518,6 +524,8 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     /**
+     * CS427 
+     * Issue Link: https://github.com/Itiviti/simple-slack-api/issues/115
      * Remove SlackMemberChannelLeftListener from the corresponding listener list
      * @param listener listener to remove from the slack session
      */
