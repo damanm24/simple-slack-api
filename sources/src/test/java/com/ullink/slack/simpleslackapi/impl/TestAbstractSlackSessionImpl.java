@@ -6,6 +6,7 @@ import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -388,6 +389,11 @@ public class TestAbstractSlackSessionImpl
         @Override
         public long getHeartbeat() {
             return 0;
+        }
+
+        @Override
+        public void setAuthToken(String newToken) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
     }

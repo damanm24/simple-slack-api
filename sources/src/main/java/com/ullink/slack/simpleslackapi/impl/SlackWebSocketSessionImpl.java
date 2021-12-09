@@ -21,8 +21,11 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
+import com.ullink.slack.simpleslackapi.events.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -57,27 +60,6 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.WebSocketContainerProvider;
 import com.ullink.slack.simpleslackapi.blocks.Block;
-import com.ullink.slack.simpleslackapi.events.PinAdded;
-import com.ullink.slack.simpleslackapi.events.PinRemoved;
-import com.ullink.slack.simpleslackapi.events.PresenceChange;
-import com.ullink.slack.simpleslackapi.events.ReactionAdded;
-import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelJoined;
-import com.ullink.slack.simpleslackapi.events.SlackChannelLeft;
-import com.ullink.slack.simpleslackapi.events.SlackChannelRenamed;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackConnected;
-import com.ullink.slack.simpleslackapi.events.SlackDisconnected;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.events.SlackMessageUpdated;
-import com.ullink.slack.simpleslackapi.events.UnknownEvent;
-import com.ullink.slack.simpleslackapi.events.UserTyping;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackTeamJoin;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChange;
 import com.ullink.slack.simpleslackapi.events.userchange.SlackUserChangeEvent;
@@ -153,7 +135,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     private  static final int                 DEFAULT_HEARTBEAT_IN_MILLIS = 30000;
 
     private volatile Session websocketSession;
-    private final    String  authToken;
+    private          String  authToken;
     private          String  slackApiBase               = DEFAULT_SLACK_API_HTTPS_ROOT;
     private String                            proxyAddress;
     private int                               proxyPort                  = -1;
@@ -243,6 +225,12 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
                     break;
                 case SLACK_CHANNEL_LEFT:
                     dispatchImpl((SlackChannelLeft) event, channelLeftListener);
+                    break;
+                case SLACK_MEMBER_CHANNEL_JOINED:
+                    dispatchImpl((SlackMemberChannelJoined) event, memberChannelJoinedListener);
+                    break;
+                case SLACK_MEMBER_CHANNEL_LEFT:
+                    dispatchImpl((SlackMemberChannelLeft) event, memberChannelLeftListener);
                     break;
                 case SLACK_GROUP_JOINED:
                     dispatchImpl((SlackGroupJoined) event, groupJoinedListener);
@@ -381,7 +369,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     {
         LOGGER.info("connecting to slack");
         HttpClient httpClient = getHttpClient();
-        HttpGet request = new HttpGet(slackApiBase + "rtm.start?token=" + authToken);
+        HttpPost request = new HttpPost(slackApiBase + "rtm.start");
+        request.setHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded");
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
         HttpResponse response = httpClient.execute(request);
         LOGGER.debug(response.getStatusLine().toString());
         String jsonResponse = consumeToString(response.getEntity().getContent());
@@ -906,7 +896,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
       Map<String, String> arguments = new HashMap<>();
       arguments.put("token", authToken);
       arguments.put("channel", channel.getId());
-      arguments.put("user", user.getId());
+      arguments.put("users", user.getId());
       postSlackCommand(arguments, CONVERSATION.INVITE_COMMAND, handle, SlackChannelReply.class);
       return handle;
     }
@@ -1394,5 +1384,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             users.put(event.getUser().getId(), event.getUser());
         }
     };
+
+    public void setAuthToken(String newToken) {
+        authToken = newToken;
+    }
 
 }

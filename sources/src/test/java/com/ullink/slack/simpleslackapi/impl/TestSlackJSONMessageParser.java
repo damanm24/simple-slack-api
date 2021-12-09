@@ -49,6 +49,12 @@ public class TestSlackJSONMessageParser {
 
     private static final String TEST_USER_TYPING = "{\"type\":\"user_typing\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER3\"}";
 
+    private static final String TEST_USER_JOIN_CHANNEL = "{\"type\":\"member_joined_channel\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\"}";
+
+    private static final String TEST_USER_LEAVE_CHANNEL = "{\"type\":\"member_left_channel\",\"channel\":\"TESTCHANNEL1\",\"user\":\"TESTUSER1\"}";
+
+
+
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
@@ -56,6 +62,11 @@ public class TestSlackJSONMessageParser {
             @Override
             public long getHeartbeat() {
                 return 0;
+            }
+
+            @Override
+            public void setAuthToken(String newToken) {
+
             }
 
             @Override
@@ -423,6 +434,22 @@ public class TestSlackJSONMessageParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testUserJoinChannel() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_USER_JOIN_CHANNEL).getAsJsonObject();
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackMemberChannelJoined.class);
+    }
+
+    @Test
+    public void setTestUserLeaveChannel() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(TEST_USER_LEAVE_CHANNEL).getAsJsonObject();
+        SlackEvent event = SlackJSONMessageParser.decode(session, object);
+        Assertions.assertThat(event).isInstanceOf(SlackMemberChannelLeft.class);
     }
 
     @Test
