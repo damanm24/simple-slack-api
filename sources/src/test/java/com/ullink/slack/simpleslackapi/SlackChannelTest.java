@@ -40,7 +40,11 @@ public class SlackChannelTest {
   public void setOut() {
     System.setOut(standardOut);
   }
-
+  
+   //THIS TEST REQUIRES A LIVE SLACK ENVIRONMENT TO BE FUNCTIONAL
+  //AUTH TOKENS MUST BE PLACED IN A FILE UNDER RESOURCES CALLED "authToken.safe"
+  //Corresponds to validating issue: https://github.com/Itiviti/simple-slack-api/issues/115
+  //Issue 115
   @Test
   public void testChannelMemberListeners() throws IOException {
     String authTokens = getLines("/authToken");
